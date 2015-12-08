@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BillBot</string>
+    <string name="record_button_start">Record</string>
+    <string name="record_button_stop">Stop</string>
+    <string name="play_button_start">Play</string>
+    <string name="play_button_stop">Stop</string>
+    <string name="welcome_text">Yo</string>
+</resources>
