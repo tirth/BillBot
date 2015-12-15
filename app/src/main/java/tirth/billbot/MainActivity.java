@@ -68,86 +68,86 @@ public class MainActivity extends AppCompatActivity {
 //        }
     }
 
-    public void record(View view) {
-        boolean start = recordButton.getText().toString().equals(recordStartText);
-
-        if (start)
-            startRecording();
-        else
-            stopRecording();
-    }
-
-    public void play(View view) {
-        boolean start = playButton.getText().toString().equals(playStartText);
-
-        if (start)
-            startPlaying();
-        else
-            stopPlaying();
-    }
-
-    private void startPlaying() {
-        player = new MediaPlayer();
-
-        try {
-            player.setDataSource(audioFileName);
-            player.prepare();
-            player.start();
-
-            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer player) {
-                    stopPlaying();
-                }
-            });
-
-            playButton.setText(playStopText);
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Couldn't prepare :( - " + e.getMessage());
-        }
-    }
-
-    private void stopPlaying() {
-        player.release();
-        player = null;
-
-        playButton.setText(playStartText);
-    }
-
-    public void startRecording() {
-        recorder = new MediaRecorder();
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        recorder.setOutputFile(audioFileName);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
-        try {
-            recorder.prepare();
-            recorder.start();
-
-            chronometer.setBase(SystemClock.elapsedRealtime());
-            chronometer.start();
-
-            Log.i(LOG_TAG, "Recording started");
-
-            recordButton.setText(recordStopText);
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Couldn't prepare :( - " + e.getMessage());
-        }
-    }
-
-    public void stopRecording() {
-        if (recorder != null) {
-            recorder.stop();
-            recorder.release();
-
-            chronometer.stop();
-
-            recorder = null;
-            }
-
-        Log.i(LOG_TAG, "Recording stopped");
-
-        recordButton.setText(recordStartText);
-    }
+//    public void record(View view) {
+//        boolean start = recordButton.getText().toString().equals(recordStartText);
+//
+//        if (start)
+//            startRecording();
+//        else
+//            stopRecording();
+//    }
+//
+//    public void play(View view) {
+//        boolean start = playButton.getText().toString().equals(playStartText);
+//
+//        if (start)
+//            startPlaying();
+//        else
+//            stopPlaying();
+//    }
+//
+//    private void startPlaying() {
+//        player = new MediaPlayer();
+//
+//        try {
+//            player.setDataSource(audioFileName);
+//            player.prepare();
+//            player.start();
+//
+//            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                @Override
+//                public void onCompletion(MediaPlayer player) {
+//                    stopPlaying();
+//                }
+//            });
+//
+//            playButton.setText(playStopText);
+//        } catch (IOException e) {
+//            Log.e(LOG_TAG, "Couldn't prepare :( - " + e.getMessage());
+//        }
+//    }
+//
+//    private void stopPlaying() {
+//        player.release();
+//        player = null;
+//
+//        playButton.setText(playStartText);
+//    }
+//
+//    public void startRecording() {
+//        recorder = new MediaRecorder();
+//        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+//        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+//        recorder.setOutputFile(audioFileName);
+//        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+//
+//        try {
+//            recorder.prepare();
+//            recorder.start();
+//
+//            chronometer.setBase(SystemClock.elapsedRealtime());
+//            chronometer.start();
+//
+//            Log.i(LOG_TAG, "Recording started");
+//
+//            recordButton.setText(recordStopText);
+//        } catch (IOException e) {
+//            Log.e(LOG_TAG, "Couldn't prepare :( - " + e.getMessage());
+//        }
+//    }
+//
+//    public void stopRecording() {
+//        if (recorder != null) {
+//            recorder.stop();
+//            recorder.release();
+//
+//            chronometer.stop();
+//
+//            recorder = null;
+//            }
+//
+//        Log.i(LOG_TAG, "Recording stopped");
+//
+//        recordButton.setText(recordStartText);
+//    }
 }
