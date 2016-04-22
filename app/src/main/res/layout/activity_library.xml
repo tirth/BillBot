@@ -8,8 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".LibraryActivity"
-    android:weightSum="1">
+    tools:context=".LibraryActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,15 +18,38 @@
         android:id="@+id/script_header"
         android:layout_gravity="center_horizontal" />
 
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:checked="true"
+                android:onClick="sort"/>
+
+            <RadioButton
+                android:id="@+id/radio_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date"
+                android:onClick="sort"/>
+
+        </RadioGroup>
+
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="188dp"
-        android:id="@+id/scripts_list"
-        android:layout_weight="0.26" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/scripts_list"/>
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:text="@string/record_button_text"
         android:id="@+id/button"
         android:layout_gravity="bottom"

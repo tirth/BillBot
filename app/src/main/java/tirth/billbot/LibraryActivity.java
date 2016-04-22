@@ -3,28 +3,38 @@ package tirth.billbot;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.RadioButton;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 
 public class LibraryActivity extends AppCompatActivity {
+
+    public HashMap<String, Integer> nameMap;
+    public HashMap<Long, String> dateMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
 
-        // get listView
-        ListView scriptsList = (ListView)findViewById(R.id.scripts_list);
+        nameMap = new HashMap<>();
+        dateMap = new HashMap<>();
+
+        findViewById(R.id.radio_name).callOnClick();
+    }
+
+    public void sort(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
 
         // enumerate scripts
         String path = getFilesDir().getAbsolutePath();
@@ -33,44 +43,73 @@ public class LibraryActivity extends AppCompatActivity {
         ArrayList<String> allFileList = new ArrayList<>();
 
         for (File file : fileList) {
+            if (!file.getName().contains(".3gp"))
+                continue;
+
             allFileList.add(file.getName());
+            dateMap.put(file.lastModified(), file.getName());
         }
 
-        final HashMap<String, Integer> stringMap = new HashMap<>();
-
         for (String fileName : allFileList) {
+            Log.v("THING", fileName);
+
             String[] fileStuff = fileName.split("-");
 
             String name = fileStuff[0];
-            Integer number = Integer.parseInt(fileStuff[1]);
+            String num = fileStuff[1].substring(0, fileStuff[1].indexOf('.'));
 
-            if (!stringMap.containsKey(name))
-                stringMap.put(name, number);
+            Integer number = Integer.parseInt(num);
+
+            if (!nameMap.containsKey(name))
+            {
+                nameMap.put(name, number);
+            }
             else {
-                if (number > stringMap.get(name)) {
-                    stringMap.remove(name);
-                    stringMap.put(name, number);
+                if (number > nameMap.get(name)) {
+                    nameMap.remove(name);
+                    nameMap.put(name, number);
                 }
             }
         }
 
+        // get listView
+        ListView scriptsList = (ListView) findViewById(R.id.scripts_list);
+
         final ArrayList<String> names = new ArrayList<>();
 
-        for (String name :
-                stringMap.keySet()) {
-         names.add(name);
+        switch (view.getId()) {
+            case R.id.radio_date:
+                if (checked) {
+                    ArrayList<Long> dates = new ArrayList<>();
+
+                    for (Long date : dateMap.keySet()) {
+                        dates.add(date);
+                    }
+
+                    Collections.sort(dates);
+
+                    names.clear();
+
+                    for (Long date : dates) {
+                        String name = dateMap.get(date).split("-")[0];
+
+                        if (!names.contains(name))
+                            names.add(name);
+                    }
+
+                    Collections.reverse(names);
+                }
+                break;
+
+            case R.id.radio_name:
+                if (checked) {
+                    for (String name : nameMap.keySet())
+                        names.add(name);
+
+                    Collections.sort(names);
+                }
+                break;
         }
-
-        final ArrayList<String> testList = new ArrayList<>();
-
-        testList.add("Uno");
-        testList.add("Dos");
-        testList.add("Tres");
-        testList.add("Quarto");
-        testList.add("Fivo");
-        testList.add("Sixo");
-        testList.add("I don't know Spanisho");
-        testList.add("Yo");
 
         ArrayAdapter<String> scriptAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, names);
 
@@ -81,10 +120,7 @@ public class LibraryActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selected = names.get(position);
-
-//                Toast.makeText(getApplicationContext(), "You picked " + selected, Toast.LENGTH_LONG).show();
-
-                done(selected, stringMap.get(selected));
+                done(selected, nameMap.get(selected));
             }
         });
     }

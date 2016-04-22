@@ -1,16 +1,17 @@
 package tirth.billbot;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.BaseKeyListener;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
+import java.io.File;
 import java.io.IOException;
 
 public class PlaybackActivity extends AppCompatActivity {
@@ -78,7 +79,7 @@ public class PlaybackActivity extends AppCompatActivity {
         if (player.isPlaying())
             stopPlaying();
 
-        String recordingFilename = audioFilePath + scriptName + "-" + recordingNumber;
+        String recordingFilename = audioFilePath + scriptName + "-" + recordingNumber + ".3gp";
 
         try {
             player.setDataSource(recordingFilename);
@@ -117,5 +118,50 @@ public class PlaybackActivity extends AppCompatActivity {
                 Log.e(LOG_TAG, "Couldn't resume");
             }
         }
+    }
+
+    public void delete(View view) {
+        AlertDialog areYouSure = new AlertDialog.Builder(this)
+                .setTitle("Delete " + scriptName)
+                .setMessage("You sure bro?")
+
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String path = getFilesDir().getAbsolutePath();
+                        File allFiles = new File(path);
+                        File[] fileList = allFiles.listFiles();
+
+                        for (File file : fileList){
+                            String name = file.getName().split("-")[0];
+
+                            if (name.equals(scriptName))
+                                file.delete();
+                        }
+
+                        dialog.dismiss();
+
+                        BackToMenu();
+                    }
+                })
+
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
+
+        areYouSure.show();
+    }
+
+    public void BackToMenu() {
+        Intent intent = new Intent(this, LibraryActivity.class);
+
+        startActivity(intent);
+    }
+
+    public void menu(View view) {
+        BackToMenu();
     }
 }

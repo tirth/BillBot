@@ -23,6 +23,7 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class RecordActivity extends AppCompatActivity {
 
@@ -158,7 +159,7 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void startRecording(int recordingNumber) {
-        String recordingFilename = audioFilePath + scriptName + "-" + recordingNumber;
+        String recordingFilename = audioFilePath + scriptName + "-" + recordingNumber + ".3gp";
 
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -197,6 +198,27 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void setName(String name) {
+        if (name.equals("")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("Script Name Can't Be Empty");
+
+            final EditText input = new EditText(this);
+            input.setHint("Enter script name");
+
+            builder.setView(input);
+
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String value = input.getText().toString();
+                    setName(value);
+                }
+            });
+
+            builder.create().show();
+        }
+
         TextView titleText = (TextView) findViewById(R.id.record_title);
         titleText.setText(name);
 

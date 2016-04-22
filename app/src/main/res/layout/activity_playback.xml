@@ -31,7 +31,8 @@
         android:layout_height="wrap_content"
         android:text="Play next"
         android:id="@+id/playback_button_next"
-        android:onClick="playbackNext"/>
+        android:onClick="playbackNext"
+        android:layout_weight="1"/>
 
     <Button
         android:layout_width="match_parent"
@@ -47,4 +48,18 @@
         android:text="Play/Pause"
         android:id="@+id/playback_button_pause"
         android:onClick="pause"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:id="@+id/playback_button_delete"
+        android:onClick="delete"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Back to menu"
+        android:id="@+id/playback_button_menu"
+        android:onClick="menu"/>
 </LinearLayout>
