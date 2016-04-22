@@ -11,18 +11,20 @@
     tools:context="tirth.billbot.PlaybackActivity">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Lines: "
-        android:id="@+id/playback_numRecordings" />
+        android:id="@+id/playback_title"
+        android:text="Title"
+        android:gravity="center"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Current: "
-        android:id="@+id/playback_current" />
+        android:text="0/0"
+        android:id="@+id/playback_progress"
+        android:gravity="center" />
 
     <Button
         android:layout_width="match_parent"
@@ -38,4 +40,11 @@
         android:id="@+id/playback_button_last"
         android:layout_gravity="center_horizontal"
         android:onClick="playbackPrevious"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Play/Pause"
+        android:id="@+id/playback_button_pause"
+        android:onClick="pause"/>
 </LinearLayout>

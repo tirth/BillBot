@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
         audioFileName = getFilesDir().getAbsolutePath() + "/recorded.3gp";
 
+        Log.i(LOG_TAG, "Files saved to " + audioFileName);
+
         recordStartText = getResources().getText(R.string.record_button_start).toString();
         recordStopText = getResources().getText(R.string.record_button_stop).toString();
 

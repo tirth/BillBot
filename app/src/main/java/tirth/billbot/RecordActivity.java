@@ -1,5 +1,9 @@
 package tirth.billbot;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -7,9 +11,11 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.DialerFilter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,8 +31,8 @@ public class RecordActivity extends AppCompatActivity {
     private static String audioFilePath = null;
     private static String scriptName = null;
 
-    private static int numRecordings = 0;
-    private static int currentRecording = 0;
+    private static int numRecordings = 1;
+    private static int currentRecording = 1;
 
     private static String recordStartText = null;
     private static String recordStopText = null;
@@ -51,6 +57,8 @@ public class RecordActivity extends AppCompatActivity {
 
         audioFilePath = getFilesDir().getAbsolutePath() + "/";
 
+        Log.i(LOG_TAG, "Audio file path: " + audioFilePath);
+
         recordStartText = getResources().getText(R.string.record_button_start).toString();
         recordStopText = getResources().getText(R.string.record_button_stop).toString();
 
@@ -60,27 +68,50 @@ public class RecordActivity extends AppCompatActivity {
         recordButton = (Button) findViewById(R.id.record_start_stop_button);
         playButton = (Button) findViewById(R.id.record_test_button);
 
-        chronometer = (Chronometer)findViewById(R.id.record_chronometer);
+        chronometer = (Chronometer) findViewById(R.id.record_chronometer);
 
         progressText = (TextView) findViewById(R.id.record_progress_text);
 
         String progress = String.format("%d / %d", currentRecording, numRecordings);
         progressText.setText(progress);
+
+        // set title
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Script Name");
+
+        final EditText input = new EditText(this);
+        input.setHint("Enter script name");
+
+        builder.setView(input);
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String value = input.getText().toString();
+                setName(value);
+            }
+        });
+
+        builder.create().show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        currentRecording = 0;
-        numRecordings = 0;
+        currentRecording = 1;
+        numRecordings = 1;
     }
 
     public void record(View view) {
         boolean start = recordButton.getText().toString().equals(recordStartText);
 
+//        // set name
+//        setName(view);
+
         if (start)
-            startRecording(currentRecording + 1);
+            startRecording(currentRecording);
         else
             stopRecording();
     }
@@ -89,7 +120,7 @@ public class RecordActivity extends AppCompatActivity {
         boolean start = playButton.getText().toString().equals(playStartText);
 
         if (start)
-            startPlaying(currentRecording + 1);
+            startPlaying(currentRecording);
         else
             stopPlaying();
     }
@@ -165,22 +196,12 @@ public class RecordActivity extends AppCompatActivity {
         recordButton.setText(recordStartText);
     }
 
-    public void setName(View view) {
-        EditText nameText = (EditText)findViewById(R.id.script_name_edittext);
-        String name = nameText.getText().toString();
+    public void setName(String name) {
+        TextView titleText = (TextView) findViewById(R.id.record_title);
+        titleText.setText(name);
 
-        Toast.makeText(getApplicationContext(), "You picked " + name + ", asshole", Toast.LENGTH_LONG).show();
-
-        Button setButton = (Button) findViewById(R.id.set_name_button);
-        setButton.setVisibility(View.GONE);
-        nameText.setVisibility(View.GONE);
-
-        TextView title = (TextView) findViewById(R.id.script_title_text);
-
-        String titleText = "Script: " + name;
-
+        Toast.makeText(getApplicationContext(), "Script name: " + name, Toast.LENGTH_LONG).show();
         scriptName = name;
-        title.setText(titleText);
     }
 
     public void nextLine(View view) {
@@ -197,6 +218,8 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void previousRecording(View view) {
+        if (currentRecording < 1) return;
+
         currentRecording--;
 
         String progress = String.format("%d / %d", currentRecording, numRecordings);
@@ -204,6 +227,8 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void nextRecording(View view) {
+        if (currentRecording == numRecordings) return;
+
         currentRecording++;
 
         String progress = String.format("%d / %d", currentRecording, numRecordings);

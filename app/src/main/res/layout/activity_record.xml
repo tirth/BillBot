@@ -10,42 +10,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="tirth.billbot.RecordActivity">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/record_script_name"
-            android:id="@+id/script_title_text"
-            android:layout_gravity="center_vertical"
-            android:textStyle="bold"
-            android:textSize="18sp" />
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/script_name_edittext"
-            android:layout_weight="1"
-            android:hint="@string/script_name_hint"
-            android:layout_marginLeft="10dp" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Set"
-            android:id="@+id/set_name_button"
-            android:onClick="setName"/>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:text="Title"
+        android:id="@+id/record_title"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center">
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -72,14 +49,30 @@
             android:onClick="reset"/>
     </LinearLayout>
 
-    <Chronometer
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/record_chronometer"
-        android:layout_gravity="center_horizontal"
-        android:textSize="50dp"
-        android:textStyle="italic"
-        android:typeface="serif" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="0/0"
+            android:id="@+id/record_progress_text"
+            android:layout_gravity="bottom"
+            android:textSize="50dp" />
+
+        <Chronometer
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/record_chronometer"
+            android:layout_gravity="right"
+            android:textSize="50dp"
+            android:textStyle="italic"
+            android:typeface="serif"
+            android:layout_marginLeft="80dp" />
+
+    </LinearLayout>
 
     <Button
         android:layout_width="fill_parent"
@@ -87,7 +80,8 @@
         android:text="Record"
         android:id="@+id/record_start_stop_button"
         android:layout_gravity="center_horizontal"
-        android:onClick="record"/>
+        android:onClick="record"
+        android:textSize="50dp" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -102,13 +96,6 @@
             android:text="Previous"
             android:id="@+id/record_previous"
             android:onClick="previousRecording"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
-            android:id="@+id/record_progress_text" />
 
         <Button
             style="?android:attr/buttonStyleSmall"

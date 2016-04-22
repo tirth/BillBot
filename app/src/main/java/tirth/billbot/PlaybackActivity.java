@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 
 public class PlaybackActivity extends AppCompatActivity {
@@ -18,16 +20,11 @@ public class PlaybackActivity extends AppCompatActivity {
     private static String audioFilePath = null;
 
     private static String scriptName = null;
-    private static int numRecordings = 0;
-    private static int currentRecording = 0;
+    private static int numRecordings = 1;
+    private static int currentRecording = 1;
 
-    private static String playStartText = null;
-    private static String playStopText = null;
+    TextView recordingProgressText = null;
 
-    TextView currentRecordingText = null;
-
-    private Button playNextButton = null;
-    private Button playPrevButton = null;
     private MediaPlayer player = null;
 
     @Override
@@ -35,48 +32,51 @@ public class PlaybackActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playback);
 
+        player = new MediaPlayer();
+
         Intent intent = getIntent();
 
         scriptName = intent.getStringExtra("scriptName");
-        numRecordings = intent.getIntExtra("numRecordings", 0);
-        currentRecording = 0;
+        numRecordings = intent.getIntExtra("numRecordings", 1);
+        currentRecording = 1;
 
-        TextView numRecordingsText = (TextView) findViewById(R.id.playback_numRecordings);
-        String numText = "Lines: " + numRecordings;
-        numRecordingsText.setText(numText);
+        // recording title
+        TextView title = (TextView) findViewById(R.id.playback_title);
+        title.setText(scriptName);
 
-        currentRecordingText = (TextView) findViewById(R.id.playback_current);
-        String currentText = "Current: " + currentRecording;
-        currentRecordingText.setText(currentText);
-
-        playStartText = "Playback start";
-        playStopText = "Playback stop";
+        // recording progress
+        recordingProgressText = (TextView) findViewById(R.id.playback_progress);
+        String progressText = currentRecording + "/" + numRecordings;
+        recordingProgressText.setText(progressText);
 
         audioFilePath = getFilesDir().getAbsolutePath() + "/";
-        playNextButton = (Button)findViewById(R.id.playback_button_next);
-        playPrevButton = (Button)findViewById(R.id.playback_button_last);
     }
 
     public void playbackNext(View view) {
+        if (currentRecording > numRecordings) return;
+
+        String progressText = currentRecording + "/" + numRecordings;
+        recordingProgressText.setText(progressText);
+
+        startPlaying(currentRecording);
+
         currentRecording++;
-
-        String currentText = "Current: " + currentRecording;
-        currentRecordingText.setText(currentText);
-
-        startPlaying(currentRecording, playNextButton);
     }
 
     public void playbackPrevious(View view) {
+        if (currentRecording < 1) return;
+
         currentRecording--;
 
-        String currentText = "Current: " + currentRecording;
-        currentRecordingText.setText(currentText);
+        String progressText = currentRecording + "/" + numRecordings;
+        recordingProgressText.setText(progressText);
 
-        startPlaying(currentRecording, playPrevButton);
+        startPlaying(currentRecording);
     }
 
-    private void startPlaying(int recordingNumber, final Button button) {
-        player = new MediaPlayer();
+    private void startPlaying(int recordingNumber) {
+        if (player.isPlaying())
+            stopPlaying();
 
         String recordingFilename = audioFilePath + scriptName + "-" + recordingNumber;
 
@@ -90,20 +90,32 @@ public class PlaybackActivity extends AppCompatActivity {
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer player) {
-                    stopPlaying(button);
+                    stopPlaying();
                 }
             });
 
-            button.setText(playStopText);
+//            button.setText(playStopText);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Couldn't prepare :( - " + e.getMessage());
         }
     }
 
-    private void stopPlaying(Button button) {
-        player.release();
-        player = null;
+    private void stopPlaying() {
+        player.stop();
+        player.reset();
+    }
 
-        button.setText(playStartText);
+    public void pause(View view) {
+        if (player.isPlaying()) {
+            player.pause();
+        }
+        else {
+            try {
+                player.start();
+            }
+            catch (Exception e) {
+                Log.e(LOG_TAG, "Couldn't resume");
+            }
+        }
     }
 }

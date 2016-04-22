@@ -6,7 +6,7 @@
     <string name="play_button_stop">Stop</string>
     <string name="welcome_text">Yo</string>
     <string name="script_header_text">Saved Scripts</string>
-    <string name="record_button_text">Record some shit</string>
-    <string name="record_script_name">Script name:</string>
-    <string name="script_name_hint">Gimmie a name, bitch</string>
+    <string name="record_button_text">Record stuff</string>
+    <string name="record_script_name">Script:</string>
+    <string name="script_name_hint">Enter name</string>
 </resources>
